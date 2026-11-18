@@ -30,11 +30,13 @@ export default function LoginScreen() {
       {}
       <View style={styles.container}>
         <Text style={styles.title}>ClyvoPet</Text>
-        <Text style={styles.subtitle}>Bem-vindo!</Text>
+        <Text style={styles.subtitle}>Conectando pessoas, ONGs e oportunidades para transformar realidades.</Text>
+        <Text style={styles.subtitle}>_________</Text>
+        <Text style={styles.subtitle}>Juntos, podemos fazer a diferença.</Text>
 
         <TextInput
           style={styles.input}
-          placeholder="E-mail"
+          placeholder="Digite seu e-mail"
           placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
@@ -44,7 +46,7 @@ export default function LoginScreen() {
 
         <TextInput
           style={styles.input}
-          placeholder="Senha"
+          placeholder="Digite sua senha"
           placeholderTextColor="#999"
           value={senha}
           onChangeText={setSenha}
@@ -52,7 +54,7 @@ export default function LoginScreen() {
         />
 
         <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Login</Text>}
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Entrar</Text>}
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.linkButton} onPress={() => navigation.navigate('Cadastro')}>
