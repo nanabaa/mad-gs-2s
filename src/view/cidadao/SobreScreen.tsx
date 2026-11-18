@@ -25,7 +25,7 @@ export default function SobreScreen() {
           />
         </View>
 
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Sistema de gestão para clínica veterinária</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>CONECTA SOCIAL - CONECTANDO BOAS AÇÕES</Text>
 
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
