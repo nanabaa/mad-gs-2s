@@ -19,8 +19,8 @@ function LogoHeader() {
       <Image
         source={
           theme === 'dark'
-            ? require('../../../assets/clyvoLogoB.png') 
-            : require('../../../assets/clyvoLogo.png')
+            ? require('../../../assets/Logo.png') 
+            : require('../../../assets/Logo.png')
         }
         style={styles.logo}
         resizeMode="contain"
@@ -39,7 +39,7 @@ function HomeScreen() {
 
   return (
     <ImageBackground
-      source={require('../../../assets/loginBG.png')}
+      source={require('../../../assets/loginBG.jpg')}
       style={styles.background}
       resizeMode="cover"
     >
