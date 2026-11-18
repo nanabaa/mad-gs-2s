@@ -39,7 +39,7 @@ function HomeScreen() {
 
   return (
     <ImageBackground
-      source={require('../../../assets/homeBG.png')}
+      source={require('../../../assets/loginBG.png')}
       style={styles.background}
       resizeMode="cover"
     >

@@ -57,6 +57,7 @@ export default function SobreScreen() {
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Desenvolvido por:</Text>
         <Text style={[styles.devText, { color: colors.textSecondary }]}>Ana Clara de Oliveira Nascimento</Text>
+        <Text style={[styles.devText, { color: colors.textSecondary }]}>Augusto Bonomo Junior</Text>
         <Text style={[styles.devText, { color: colors.textSecondary }]}>Isis Macedo</Text>
         <Text style={[styles.devText, { color: colors.textSecondary }]}>Henrique Pereira</Text>
         <Text style={[styles.devText, { color: colors.textSecondary }]}>Rafael Carvalho Meireles</Text>
