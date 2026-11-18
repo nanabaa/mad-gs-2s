@@ -1,42 +1,26 @@
 import api from './api';
 
-export type CadastroPayload = {
-  nome: string;
-  email: string;
-  senha: string;
-  crmv: string;
-  telefone?: string;
-  especialidade?: string;
+export type LoginResponse = {
+  token: string;
+  user: {
+    id: number;
+    nome: string;
+    email: string;
+    role: string; 
+  }
 };
 
 export const authService = {
-
-  login: async (
-    email: string,
-    senha: string
-  ) => {
-
-    const { data } = await api.post(
-      '/auth/login',
-      {
-        email,
-        senha,
-      }
-    );
-
+  login: async (email: string, senha: string): Promise<LoginResponse> => {
+    const { data } = await api.post('/auth/login', {
+      email,
+      senha,
+    });
     return data;
   },
 
-  cadastrar: async (
-    payload: CadastroPayload
-  ) => {
-
-    const { data } = await api.post(
-      '/auth/register',
-      payload
-    );
-
+  cadastrar: async (payload: any) => {
+    const { data } = await api.post('/auth/register', payload);
     return data;
   },
-
 };

@@ -141,7 +141,6 @@ npx expo install react-native-screens react-native-safe-area-context
 npx expo install @react-native-async-storage/async-storage
 npx expo install react-native-gesture-handler
 npx expo install @tanstack/react-query axios
-npx expo install expo-notifications
 ```
 4. Inicie o projeto
 
