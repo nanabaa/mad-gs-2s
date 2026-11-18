@@ -3,14 +3,12 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useConsulta, useCancelarConsulta, useFinalizarConsulta } from '../../hooks/useConsultas';
 import { useTheme } from '../../control/ThemeContext';
-import { useNotificacao } from '../../hooks/useNotificacao';
 
 export default function DetalhesConsultaScreen() {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const consultaId = route.params?.id;
   const { colors } = useTheme();
-  const { notificar } = useNotificacao();
 
   const { data: consulta, isLoading, isError, refetch } = useConsulta(consultaId);
   const cancelarConsulta = useCancelarConsulta();

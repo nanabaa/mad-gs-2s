@@ -7,14 +7,14 @@ import { useVeterinarios } from '../../hooks/useVeterinarios';
 import { useCriarConsulta, useAtualizarConsulta } from '../../hooks/useConsultas';
 import { ConsultaPayload } from '../../services/consultaService';
 import { useTheme } from '../../control/ThemeContext';
-import { useNotificacao } from '../../hooks/useNotificacao';
+
 
 export default function CadastroConsultaScreen() {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { user } = useAuth(); 
   const { colors } = useTheme();
-  const { notificar } = useNotificacao();
+  
 
   const consultaId = route.params?.id;
   const isEdicao = !!consultaId;

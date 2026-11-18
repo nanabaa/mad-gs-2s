@@ -3,14 +3,13 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useAnimal, useDeletarAnimal } from '../../hooks/useAnimais';
 import { useTheme } from '../../control/ThemeContext';
-import { useNotificacao } from '../../hooks/useNotificacao'; 
+
 
 export default function DetalhesAnimalScreen() {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const animalId = route.params?.id;
   const { colors } = useTheme();
-  const { notificar } = useNotificacao(); 
 
   const { data: animal, isLoading, isError, refetch } = useAnimal(animalId);
   const deletarAnimal = useDeletarAnimal();

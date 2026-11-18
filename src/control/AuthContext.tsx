@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '../services/authService';
 
@@ -22,32 +23,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { 
-    carregarUsuarioSalvo(); 
+  useEffect(() => {
+    carregarUsuarioSalvo();
   }, []);
 
   const carregarUsuarioSalvo = async () => {
     try {
       const token = await AsyncStorage.getItem('@ConectaSocial:token');
       const userData = await AsyncStorage.getItem('@ConectaSocial:userData');
-      if (token && userData) setUser(JSON.parse(userData));
-    } catch (e) { 
-      console.log('Erro ao carregar usuário:', e); 
-    } finally { 
-      setLoading(false); 
+      
+      if (token && userData) {
+        setUser(JSON.parse(userData));
+      }
+    } catch (e) {
+      console.log('Erro ao carregar usuário salvo:', e);
+    } finally {
+      setLoading(false);
     }
   };
 
   const login = async (email: string, senha: string): Promise<boolean> => {
     setLoading(true);
+
     try {
       const data = await authService.login(email, senha);
 
-      console.log('Retorno da API Java:', data);
+      console.log('--- RETORNO DA API ---');
+      console.log('Dados recebidos:', data);
 
-     
+      if (!data?.token) {
+        Alert.alert(
+          'Erro de Autenticação', 
+          'A API respondeu, mas não retornou o token. Verifique o contrato da API no Swagger.'
+        );
+        return false;
+      }
+
       if (!data?.user) {
-        console.log('API não retornou os dados do usuário.');
+        Alert.alert(
+          'Erro de Autenticação', 
+          'A API retornou o token, mas não retornou os dados do usuário.'
+        );
         return false;
       }
 
@@ -58,18 +74,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         role: data.user.role,
       };
 
-      
-      if (data.token) {
-        await AsyncStorage.setItem('@ConectaSocial:token', data.token);
-      }
+      await AsyncStorage.setItem('@ConectaSocial:token', data.token);
       await AsyncStorage.setItem('@ConectaSocial:userData', JSON.stringify(loggedUser));
 
       setUser(loggedUser);
+
       return true;
 
     } catch (e: any) {
-      console.log('Erro no login:', e.response?.data || e.message);
+      console.log('--- ERRO NO LOGIN ---');
+      console.log('Objeto de erro completo:', e);
+      
+      let mensagemErro = 'Não foi possível conectar ao servidor.';
+
+      if (e.response) {
+        
+        console.log('Status HTTP:', e.response.status);
+        console.log('Dados do erro:', e.response.data);
+        
+        mensagemErro = e.response.data?.message 
+                    || e.response.data?.erro 
+                    || e.response.data?.error
+                    || `Erro ${e.response.status}: Verifique os dados informados.`;
+                    
+      } else if (e.request) {
+        mensagemErro = 'Servidor não respondeu. Verifique sua conexão ou se a API está online.';
+      } else {
+        mensagemErro = e.message;
+      }
+
+      Alert.alert('Falha no Login', mensagemErro);
       return false;
+
     } finally {
       setLoading(false);
     }
@@ -81,10 +117,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await AsyncStorage.removeItem('@ConectaSocial:token');
       await AsyncStorage.removeItem('@ConectaSocial:userData');
       setUser(null);
-    } catch (e) { 
-      console.log('Erro no logout:', e); 
-    } finally { 
-      setLoading(false); 
+    } catch (e) {
+      console.log('Erro ao fazer logout:', e);
+    } finally {
+      setLoading(false);
     }
   };
 

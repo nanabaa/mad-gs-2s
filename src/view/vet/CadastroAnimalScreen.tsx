@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useCriarAnimal, useAtualizarAnimal, useAnimal } from '../../hooks/useAnimais';
 import { AnimalPayload } from '../../services/animalService';
 import { useTheme } from '../../control/ThemeContext';
-import { useNotificacao } from '../../hooks/useNotificacao';
+
 
 export default function CadastroAnimalScreen() {
   const navigation = useNavigation<any>();
@@ -12,7 +12,7 @@ export default function CadastroAnimalScreen() {
   const animalId = route.params?.id;
   const isEdicao = !!animalId;
   const { colors } = useTheme();
-  const { notificar } = useNotificacao();
+  
 
   const { data: animalExistente, isLoading: isLoadingAnimal } = useAnimal(animalId);
   const criarAnimal = useCriarAnimal();

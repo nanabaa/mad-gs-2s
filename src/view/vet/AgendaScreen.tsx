@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, 
 import { useNavigation } from '@react-navigation/native';
 import { useConsultas, useCancelarConsulta, useFinalizarConsulta, useEnviarLembrete } from '../../hooks/useConsultas';
 import { useTheme } from '../../control/ThemeContext';
-import { useNotificacao } from '../../hooks/useNotificacao';
+
 
 export default function AgendaScreen() {
   const navigation = useNavigation<any>();
@@ -12,7 +12,7 @@ export default function AgendaScreen() {
   const finalizarConsulta = useFinalizarConsulta();
   const enviarLembrete = useEnviarLembrete();
   const { colors } = useTheme();
-  const { notificar } = useNotificacao();
+ 
 
   const consultas = Array.isArray(consultasData) ? consultasData : [];
 
