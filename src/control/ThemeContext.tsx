@@ -1,86 +1,40 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useColorScheme } from 'react-native';
+import React, { createContext, useContext, ReactNode } from 'react';
 
-type ThemeType = 'light' | 'dark';
-
-interface ThemeContextData {
-  theme: ThemeType;
-  toggleTheme: () => void;
+type ThemeContextData = {
   colors: {
     background: string;
     card: string;
     text: string;
     textSecondary: string;
     primary: string;
+    primaryLight: string;
     border: string;
     header: string;
     button: string;
     buttonText: string;
   };
-}
+};
 
 const lightColors = {
-  background: '#f5f5f5',
-  card: '#ffffff',
-  text: '#333333',
+  background: '#F9F9F9',
+  card: '#FFFFFF',
+  text: '#1A1A1A',
   textSecondary: '#666666',
-  primary: '#1e3a8a',
-  border: '#dddddd',
-  header: '#60a5fa',
-  button: '#1e3a8a',
-  buttonText: '#ffffff',
+  primary: '#E85D2A',
+  primaryLight: '#FFF1EB',
+  border: '#EEEEEE',
+  header: '#FFF5ED',
+  button: '#E85D2A',
+  buttonText: '#FFFFFF',
 };
 
-const darkColors = {
-  background: '#121212',
-  card: '#1e1e1e',
-  text: '#e0e0e0',
-  textSecondary: '#a0a0a0',
-  primary: '#3b82f6',
-  border: '#333333',
-  header: '#1e3a8a',
-  button: '#3b82f6',
-  buttonText: '#ffffff',
-};
-
-const ThemeContext = createContext<ThemeContextData>({} as ThemeContextData);
+const ThemeContext = createContext<ThemeContextData>({
+  colors: lightColors,
+});
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const systemColorScheme = useColorScheme();
-  const [theme, setTheme] = useState<ThemeType>('light');
-
-  useEffect(() => {
-    carregarTema();
-  }, []);
-
-  const carregarTema = async () => {
-    try {
-      const savedTheme = await AsyncStorage.getItem('@ClyvoPet:theme');
-      if (savedTheme === 'light' || savedTheme === 'dark') {
-        setTheme(savedTheme);
-      } else if (systemColorScheme) {
-        setTheme(systemColorScheme);
-      }
-    } catch (e) {
-      console.log('Erro ao carregar tema', e);
-    }
-  };
-
-  const toggleTheme = async () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    try {
-      await AsyncStorage.setItem('@ClyvoPet:theme', newTheme);
-    } catch (e) {
-      console.log('Erro ao salvar tema', e);
-    }
-  };
-
-  const colors = theme === 'light' ? lightColors : darkColors;
-
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, colors }}>
+    <ThemeContext.Provider value={{ colors: lightColors }}>
       {children}
     </ThemeContext.Provider>
   );
