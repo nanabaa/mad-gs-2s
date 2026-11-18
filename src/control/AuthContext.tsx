@@ -8,6 +8,7 @@ type User = {
   nome: string;
   email: string;
   role: string; 
+  fotoUrl?: string | null; // <-- Campo adicionado para a foto de perfil
 };
 
 type AuthContextData = {
@@ -15,6 +16,7 @@ type AuthContextData = {
   loading: boolean;
   login: (email: string, senha: string) => Promise<boolean>;
   logout: () => Promise<void>;
+  atualizarFotoContexto: (novaFotoUrl: string) => Promise<void>; // <-- Função adicionada
 };
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -72,6 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         nome: data.user.nome,
         email: data.user.email,
         role: data.user.role,
+        fotoUrl: data.user.fotoUrl || null, // <-- Salva a foto caso o Java já retorne no login
       };
 
       await AsyncStorage.setItem('@ConectaSocial:token', data.token);
@@ -88,7 +91,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       let mensagemErro = 'Não foi possível conectar ao servidor.';
 
       if (e.response) {
-        
         console.log('Status HTTP:', e.response.status);
         console.log('Dados do erro:', e.response.data);
         
@@ -111,6 +113,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // --- NOVA FUNÇÃO: Atualiza a foto no contexto e no celular ---
+  const atualizarFotoContexto = async (novaFotoUrl: string) => {
+    if (user) {
+      const usuarioAtualizado = { ...user, fotoUrl: novaFotoUrl };
+      setUser(usuarioAtualizado);
+      // Atualiza no AsyncStorage para persistir se o app for fechado
+      await AsyncStorage.setItem('@ConectaSocial:userData', JSON.stringify(usuarioAtualizado));
+    }
+  };
+
   const logout = async () => {
     setLoading(true);
     try {
@@ -125,7 +137,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, atualizarFotoContexto }}>
       {children}
     </AuthContext.Provider>
   );

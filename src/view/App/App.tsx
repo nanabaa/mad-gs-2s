@@ -17,7 +17,7 @@ import HomeScreen from '../../view/cidadao/HomeScreen';
 import ExplorarScreen from '../../view/cidadao/ExplorarScreen';
 import MinhasAtividadesScreen from '../../view/cidadao/MinhasAtividadesScreen';
 import PerfilScreen from '../../view/cidadao/PerfilScreen';
-import SobreScreen from '../../view/vet/SobreScreen'; 
+import SobreScreen from '../../view/cidadao/SobreScreen'; 
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

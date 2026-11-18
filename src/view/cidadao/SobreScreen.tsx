@@ -17,8 +17,8 @@ export default function SobreScreen() {
           <Image
             source={
               theme === 'dark'
-                ? require('../../../assets/clyvoLogoB.png')
-                : require('../../../assets/clyvoLogo.png')
+                ? require('../../../assets/Logo.png')
+                : require('../../../assets/Logo.png')
             }
             style={styles.logo}
             resizeMode="contain"
