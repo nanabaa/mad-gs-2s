@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import { useTheme } from '../../control/ThemeContext';
 
-const COMMIT_HASH = "5c5e528353f43eb1fe7db437937ca19511d71e80";
+const COMMIT_HASH = "a3e1f1659dd80f3098e66c8a7b192424433140ed";
 
 export default function SobreScreen() {
   const navigation = useNavigation<any>();
