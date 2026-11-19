@@ -1,118 +1,80 @@
-# ClyvoPet
+# ConectaSocial
 
-**ClyvoPet** é um aplicativo mobile desenvolvido para **clínicas veterinárias**, permitindo que profissionais gerenciem animais, consultas e lembretes de forma integrada a uma API REST real hospedada no Microsoft Azure.
+> **Global Solution 2026/2 - CitizenTech**  
+> *Conectando pessoas, ONGs e oportunidades para transformar realidades.*
 
-O aplicativo é **exclusivo para profissionais da área veterinária** e possui autenticação real, CRUD completo e integração de ponta a ponta com o backend Java Spring Boot.
+O **ConectaSocial** é um aplicativo mobile desenvolvido em React Native (Expo) que visa facilitar a conexão entre voluntários e campanhas sociais. O app consome uma API RESTful desenvolvida em Java (Spring Boot) hospedada no Microsoft Azure.
 
+Até a etapa atual de desenvolvimento, o cadastro está limitado apenas à voluntários, sem permitir beneficiários ou ONGs. O Voluntário consegue acompanhar ativamente os eventos criados por ONGs para colaborar.
 ---
 
-## Sobre o Projeto
+## Funcionalidades (Requisitos Atendidos)
 
-O Clivo Vet oferece duas experiências distintas:
-
-###  Veterinário
-- Gerenciar pacientes e seus dados
-- Agendar e gerenciar consultas
-- Acompanhar saúde preventiva dos animais
-
----
+*   **Autenticação de Usuários:** Fluxo completo de Login, Cadastro (com validação de Política de Uso) e Logout, com persistência de sessão via `AsyncStorage` e proteção de rotas.
+*   **Integração com API e CRUD:** Consumo da API Java no Azure para listagem de campanhas. A arquitetura foi preparada para operações de Create, Read, Update e Delete (CRUD).
+*   **Navegação:** Navegação fluida por meio de *Bottom Tabs* (Início, Explorar, Atividades e Perfil) e *Stack Navigator* para telas de detalhes e autenticação. Total de 6+ telas funcionais.
+*   **Estilização e Identidade Visual:** Interface baseada no tema *CitizenTech*, com paleta de cores (laranja, pêssego e off-white), fontes legíveis, além de upload de foto de perfil salva localmente.
+*   **Tela "Sobre o App":** Tela dedicada a exibir os desenvolvedores, a versão do aplicativo e o hash do commit atual.
 
 ## Tecnologias Utilizadas
 
-| React Native | 0.81.5 | Framework mobile |
-| Expo | ~52.0.0 | Plataforma de desenvolvimento |
-| TypeScript | ~5.3.3 | Tipagem estática |
-| React Navigation | ^6.x | Navegação entre telas (Stack + Tabs) |
-| TanStack Query | ^5.x | Gerenciamento de estado e cache de dados |
-| Axios | ^1.x | Cliente HTTP para integração com a API |
-| AsyncStorage | 1.23.1 | Persistência local do token e sessão |
+*   **React Native** & **Expo**
+*   **TypeScript**
+*   **React Navigation** (Stack e Bottom Tabs)
+*   **React Query (TanStack)** (Gerenciamento de estado e cache)
+*   **Axios** (Consumo de API)
+*   **AsyncStorage** (Persistência local de token e foto)
+*   **Expo Image Picker** (Seleção de foto de perfil)
+
+## Arquitetura do Projeto
+
+O projeto foi estruturado seguindo o padrão de separação de responsabilidades:
+
+```text
+src/
+├── control/       # Contextos globais (AuthContext, ThemeContext)
+├── hooks/         # Hooks customizados (ex: useCampanhas)
+├── services/      # Configuração e chamadas de API (axios, auth, campanhas)
+└── view/          # Telas do aplicativo
+    ├── App/       # Navegação principal (App.tsx)
+    ├── cidadao/   # Telas da área logada (Home, Explorar, Atividades, Perfil, Sobre)
+    └── login/     # Telas de autenticação (Login, Cadastro)
 
 ## Integração com a API
 
 O aplicativo consome a **API REST ClyvoPet**, hospedada no Microsoft Azure:
 
-**URL Base:** `https://clyvopet-rm561497.azurewebsites.net/api`
+**URL Base:** `https://global-solution-java-rm561497.azurewebsites.net/`
 
-### Endpoints Utilizados
+## Endpoints da API Consumidos
 
-| Método | Endpoint | Descrição |
-| :--- | :--- | :--- |
-| `POST` | `/auth/login` | Autenticação do veterinário |
-| `POST` | `/auth/register` | Cadastro de novo veterinário |
-| `GET` | `/animais` | Listar todos os animais |
-| `GET` | `/animais/{id}` | Buscar animal por ID |
-| `POST` | `/animais` | Criar novo animal |
-| `PUT` | `/animais/{id}` | Atualizar animal |
-| `DELETE` | `/animais/{id}` | Excluir animal |
-| `GET` | `/consultas` | Listar todas as consultas |
-| `GET` | `/consultas/{id}` | Buscar consulta por ID |
-| `POST` | `/consultas` | Criar nova consulta |
-| `PUT` | `/consultas/{id}` | Atualizar consulta |
-| `DELETE` | `/consultas/{id}` | Excluir consulta |
-| `GET` | `/lembretes` | Listar todos os lembretes |
-| `POST` | `/lembretes/enviar-todos` | Enviar todos os lembretes pendentes |
-| `GET` | `/veterinarios` | Listar veterinários |
+O aplicativo está integrado com a API Java hospedada no Azure. Abaixo estão os principais endpoints utilizados:
 
+| Método | Endpoint | Descrição | Autenticação |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/login` | Realiza o login e retorna o Token JWT | Pública |
+| `POST` | `/api/auth/register` | Cadastra um novo usuário voluntário | Pública |
+| `GET` | `/api/campanhas` | Lista todas as campanhas para a Home/Explorar | Bearer Token |
+| `GET` | `/api/campanhas/{id}` | Busca os detalhes de uma campanha | Bearer Token |
+| `POST` | `/api/campanhas` | Cria uma nova campanha (ONG) | Bearer Token |
+| `PUT` | `/api/campanhas/{id}` | Atualiza uma campanha existente (ONG) | Bearer Token |
+| `DELETE` | `/api/campanhas/{id}` | Deleta uma campanha (ONG) | Bearer Token |
 
-## Estrutura de Pastas
-
-```
-Challenge-MAD-V2/
-├── assets/ # Imagens e ícones
-│ ├── clyvoLogo.png
-│ └── homeBG.jpg
-│ └── loginBG.jpg
-├── src/
-│ ├── control/
-│ │ └── AuthContext.tsx # Autenticação + persistência de sessão
-│ ├── hooks/ # Hooks do TanStack Query (lógica de negócio)
-│ │ ├── useAnimais.ts
-│ │ ├── useConsultas.ts
-│ │ ├── useLembretes.ts
-│ │ └── useVeterinarios.ts
-│ ├── services/ # Camada de acesso à API (Axios)
-│ │ ├── api.ts # Configuração do Axios + interceptor JWT
-│ │ ├── authService.ts
-│ │ ├── animalService.ts
-│ │ ├── consultaService.ts
-│ │ ├── lembreteService.ts
-│ │ └── veterinarioService.ts
-│ └── view/ # Interface (telas e navegação)
-│ ├── App/
-│ │ └── App.tsx # Navegação raiz + QueryClientProvider
-│ ├── login/
-│ │ ├── LoginScreen.tsx
-│ │ └── CadastroScreen.tsx
-│ └── vet/
-│ ├── VetNavigator.tsx # Navegação por abas
-│ ├── PerfilAnimaisScreen.tsx
-│ ├── CadastroAnimalScreen.tsx
-│ ├── DetalhesAnimalScreen.tsx
-│ ├── AgendaScreen.tsx
-│ ├── CadastroConsultaScreen.tsx
-│ ├── DetalhesConsultaScreen.tsx
-│ └── SaudePreventivaScreen.tsx
-├── App.tsx (ou index.ts)
-├── app.json
-└── package.json
-
+> **Nota:** O aplicativo utiliza a biblioteca **Axios** com *Interceptors* para injetar automaticamente o Token JWT no cabeçalho `Authorization` de todas as requisições autenticadas.
 ```
 
 ## Telas do Aplicativo
 
 | Tela | Funcionalidade |
 | :--- | :--- |
-| **Login** | Autenticação do veterinário |
-| **Cadastro** | Cadastro de novo veterinário |
-| **Início** | Boas-vindas + logout + sobre |
-| **Sobre** | Hash do commit + Versão do app + Equipe |
-| **Animais** | Lista de animais com botões: Visualizar, Editar, Excluir |
-| **Detalhes do Animal** | Tabela com todos os dados do animal + Editar/Excluir/Voltar |
-| **Cadastro/Editar Animal** | Formulário com labels + campos validados |
-| **Agenda (Consultas)** | Lista de consultas com 5 ações: Visualizar, Editar, Cancelar, Finalizar, Enviar Lembrete |
-| **Detalhes da Consulta** | Tabela de dados + Finalizar/Editar/Cancelar/Voltar |
-| **Cadastro/Editar Consulta** | Formulário com seleção de animal e veterinário |
-| **Lembretes** | Painel com Total/Enviados/Pendentes + Filtro + Enviar Todos |
+| **Login** | Autenticação do usuário |
+| **Cadastro** | Cadastro de novo usuário |
+| **Home** | Banner + Campanhas em destaque |
+| **Explorar** | Filtro de busca pra campanhas |
+| **Atividades** | Tipo de perfil + Orientações |
+| **Perfil** | Edição de foto de perfil + Informações de contato + Sobre + Logout |
+| **Sobre** | Hash do commit + Versão do app + Equipe + Política de uso|
+
 
 ## Como Instalar e Executar
 
@@ -126,8 +88,8 @@ Challenge-MAD-V2/
 
 1. **Clone o repositório**
 ```
-git clone https://github.com/isismodd/Challenge-MAD-V2.git
-cd Challenge-MAD-V2
+git clone https://github.com/nanabaa/mad-gs-2s.git
+cd mad-gs-2s
 ```
 2. Instale as dependências
 
@@ -153,11 +115,7 @@ npm run android
 
 | Perfil | Email | Senha |
 |--------|-------|-------|
-| **Veterinário** | `vet@clivovet.com` | qualquer |
-| **Veterinário** | `veterinario@clivovet.com` | qualquer |
-| **Veterinário** | `dr@clivovet.com` | qualquer |
-
-> 💡 **Dica:** Qualquer email/senha funciona! O sistema identifica automaticamente seu perfil pelo email informado.
+| **Voluntário** | `ana@gmail.com` | 12345678 |
 
 ## Dependências Principais
 ```
@@ -184,14 +142,14 @@ npm run android
 
 -O cache é gerenciado pelo TanStack Query (atualização automática após mutações).
 
--O app é exclusivo para veterinários (não há perfil de tutor).
+-O app é temporariamente exclusivo para voluntários (não há perfil de ONG ou beneficiário por enquanto).
 
 ## Backend
 -O backend do ClyvoPet foi desenvolvido em Java Spring Boot e está hospedado no Microsoft Azure App Service.
 
--Repositório do backend: https://github.com/isismodd/Sprint4-ClyvoPet
+-Repositório do backend: https://github.com/isismodd/Global-Solution-Java.git
 
--URL da API: clyvopet-rm561497.azurewebsites.net
+-URL da API: global-solution-java-rm561497.azurewebsites.net
 
 -Banco de dados: Oracle Database
 
@@ -199,9 +157,10 @@ npm run android
 
 ## Grupo do Challenge
 Ana Clara de Oliveira Nascimento | RM 561957
+Augusto Bonomo Junior | RM 565155
 Isis Macedo | RM 561497
 Henrique Pereira | RM 565608
 Rafael Carvalho Meireles | RM 563413
 
-**Link do vídeo no YouTube:** https://youtu.be/IqMA411SPO8
-**Link do Repositório:** https://github.com/isismodd/Challenge-MAD-V2.git
+**Link do vídeo no YouTube:** 
+**Link do Repositório:** https://github.com/nanabaa/mad-gs-2s.git
