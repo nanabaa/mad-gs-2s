@@ -1,11 +1,29 @@
-// src/view/login/CadastroScreen.tsx
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   ScrollView, Alert, ActivityIndicator, ImageBackground, Modal, Pressable
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { authService } from '../../services/authService'; // Certifique-se que o caminho está certo
+import { authService } from '../../services/authService'; 
+
+// Função simples para formatar CPF
+const formatarCPF = (texto: string) => {
+  const apenasNumeros = texto.replace(/\D/g, '');
+  return apenasNumeros
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+    .replace(/(-\d{2})\d+?$/, '$1');
+};
+
+// Função simples para formatar Data (DD/MM/AAAA)
+const formatarData = (texto: string) => {
+  const apenasNumeros = texto.replace(/\D/g, '');
+  return apenasNumeros
+    .replace(/(\d{2})(\d)/, '$1/$2')
+    .replace(/(\d{2})(\d)/, '$1/$2')
+    .replace(/(\d{4})\d+?$/, '$1');
+};
 
 export default function CadastroScreen() {
   const navigation = useNavigation<any>();
@@ -15,9 +33,14 @@ export default function CadastroScreen() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [dataNascimento, setDataNascimento] = useState('');
+  const [estado, setEstado] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [bairro, setBairro] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [tipoConta, setTipoConta] = useState('VOLUNTARIO'); // Fixo em voluntário por enquanto
+  const [tipoConta, setTipoConta] = useState('VOLUNTARIO'); 
   
   // Estados dos Modais
   const [modalTipoVisible, setModalTipoVisible] = useState(false);
@@ -26,16 +49,16 @@ export default function CadastroScreen() {
 
   const handleCadastrar = async () => {
     // Validações
-    if (!nome || !email || !senha || !confirmarSenha || !telefone) {
-      Alert.alert('Erro', 'Preencha todos os campos obrigatórios.');
+    if (!nome || !email || !senha || !confirmarSenha || !telefone || !cpf || !dataNascimento || !estado || !cidade) {
+      Alert.alert('Erro', 'Preencha todos os campos obrigatórios (*).');
       return;
     }
     if (senha !== confirmarSenha) {
       Alert.alert('Erro', 'As senhas não coincidem.');
       return;
     }
-    if (senha.length < 6) {
-      Alert.alert('Erro', 'A senha deve ter no mínimo 6 caracteres.');
+    if (senha.length < 8) {
+      Alert.alert('Erro', 'A senha deve ter no mínimo 8 caracteres.');
       return;
     }
     if (!aceitouPolitica) {
@@ -45,14 +68,19 @@ export default function CadastroScreen() {
 
     setLoading(true);
     try {
-      // Envia para a API Java
       await authService.cadastrar({
         nome,
         email,
         telefone,
         senha,
-        // O seu Java pode esperar o campo 'role' ou 'tipoConta' ou 'crmv' vazio
-        role: 'VOLUNTARIO' 
+        confirmarSenha,
+        perfil: 'VOLUNTARIO',
+        aceitouPolitica: true,
+        cpf,
+        dataNascimento,
+        estado,
+        cidade,
+        bairro,
       });
 
       Alert.alert('Sucesso', 'Cadastro realizado! Faça login para continuar.', [
@@ -69,7 +97,7 @@ export default function CadastroScreen() {
 
   return (
     <ImageBackground
-      source={require('../../../assets/loginBG.jpg')} // Mantenha a mesma imagem de fundo do login
+      source={require('../../../assets/loginBG.jpg')} 
       style={styles.background}
       resizeMode="cover"
     >
@@ -112,6 +140,28 @@ export default function CadastroScreen() {
           keyboardType="email-address"
         />
 
+        <Text style={styles.label}>CPF *</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="000.000.000-00"
+          placeholderTextColor="#999"
+          value={cpf}
+          onChangeText={(t) => setCpf(formatarCPF(t))}
+          keyboardType="numeric"
+          maxLength={14}
+        />
+
+        <Text style={styles.label}>Data de Nascimento *</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="DD/MM/AAAA"
+          placeholderTextColor="#999"
+          value={dataNascimento}
+          onChangeText={(t) => setDataNascimento(formatarData(t))}
+          keyboardType="numeric"
+          maxLength={10}
+        />
+
         <Text style={styles.label}>Telefone *</Text>
         <TextInput
           style={styles.input}
@@ -122,10 +172,45 @@ export default function CadastroScreen() {
           keyboardType="phone-pad"
         />
 
+        {/* LINHA COM ESTADO E CIDADE */}
+        <View style={styles.row}>
+          <View style={styles.halfInputContainer}>
+            <Text style={styles.label}>Estado (UF) *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ex: SP"
+              placeholderTextColor="#999"
+              value={estado}
+              onChangeText={setEstado}
+              autoCapitalize="characters"
+              maxLength={2}
+            />
+          </View>
+          <View style={styles.halfInputContainer}>
+            <Text style={styles.label}>Cidade *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ex: São Paulo"
+              placeholderTextColor="#999"
+              value={cidade}
+              onChangeText={setCidade}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.label}>Bairro (Opcional)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite seu bairro"
+          placeholderTextColor="#999"
+          value={bairro}
+          onChangeText={setBairro}
+        />
+
         <Text style={styles.label}>Senha *</Text>
         <TextInput
           style={styles.input}
-          placeholder="Mínimo 6 caracteres"
+          placeholder="Mínimo 8 caracteres"
           placeholderTextColor="#999"
           value={senha}
           onChangeText={setSenha}
@@ -149,7 +234,7 @@ export default function CadastroScreen() {
             if (!aceitouPolitica) {
               setModalPoliticaVisible(true);
             } else {
-              setAceitouPolitica(false); // Permite desmarcar
+              setAceitouPolitica(false); 
             }
           }}
         >
@@ -177,15 +262,12 @@ export default function CadastroScreen() {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* ======================================================== */}
-      {/* MODAL 1: SELEÇÃO DO TIPO DE CONTA (TOGGLE) */}
-      {/* ======================================================== */}
+      {/* MODAL 1: SELEÇÃO DO TIPO DE CONTA */}
       <Modal visible={modalTipoVisible} transparent animationType="fade">
         <Pressable style={styles.modalOverlay} onPress={() => setModalTipoVisible(false)}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Selecione seu tipo de conta</Text>
             
-            {/* Opção 1: Voluntário (Ativa) */}
             <TouchableOpacity 
               style={[styles.modalOption, { borderBottomWidth: 1, borderBottomColor: '#EEE' }]}
               onPress={() => {
@@ -196,12 +278,10 @@ export default function CadastroScreen() {
               <Text style={{ color: '#333', fontSize: 16, fontWeight: 'bold' }}>Quero ser voluntário</Text>
             </TouchableOpacity>
 
-            {/* Opção 2: Ajuda (Desabilitada) */}
             <View style={[styles.modalOption, styles.modalOptionDisabled, { borderBottomWidth: 1, borderBottomColor: '#EEE' }]}>
               <Text style={{ color: '#AAA', fontSize: 16 }}>Estou buscando ajuda - Indisponível no momento</Text>
             </View>
 
-            {/* Opção 3: ONG (Desabilitada) */}
             <View style={[styles.modalOption, styles.modalOptionDisabled]}>
               <Text style={{ color: '#AAA', fontSize: 16 }}>Sou uma organização (ONG) - Indisponível no momento</Text>
             </View>
@@ -209,21 +289,17 @@ export default function CadastroScreen() {
         </Pressable>
       </Modal>
 
-      {/* ======================================================== */}
       {/* MODAL 2: POLÍTICA DE USO */}
-      {/* ======================================================== */}
       <Modal visible={modalPoliticaVisible} transparent animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { padding: 0, maxHeight: '80%' }]}>
             
-            {/* Header do Modal */}
             <View style={{ backgroundColor: '#FFF5ED', padding: 20, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
               <Text style={{ color: '#E85D2A', fontWeight: 'bold', fontSize: 12, marginBottom: 4 }}>ANTES DE CONTINUAR</Text>
               <Text style={{ color: '#333', fontWeight: 'bold', fontSize: 22 }}>Política de Uso</Text>
               <Text style={{ color: '#666', fontSize: 14, marginTop: 4 }}>Queremos manter uma comunidade segura, respeitosa e confiável.</Text>
             </View>
 
-            {/* Corpo do Modal (Scroll) */}
             <ScrollView style={{ padding: 20 }}>
               <Text style={styles.politicaTitulo}>Seus dados e sua privacidade</Text>
               <Text style={styles.politicaTexto}>
@@ -244,7 +320,6 @@ export default function CadastroScreen() {
               </Text>
             </ScrollView>
 
-            {/* Footer do Modal com Botões */}
             <View style={{ flexDirection: 'row', padding: 20, borderTopWidth: 1, borderTopColor: '#EEE', justifyContent: 'flex-end', gap: 10 }}>
               <TouchableOpacity 
                 style={{ paddingVertical: 12, paddingHorizontal: 20, borderRadius: 8, borderWidth: 1, borderColor: '#DDD' }}
@@ -288,14 +363,16 @@ const styles = StyleSheet.create({
     borderRadius: 8, fontSize: 16, backgroundColor: '#fff', color: '#333',
   },
 
-  // Estilo do Toggle (Select)
+  // Estilos para a linha de Estado e Cidade
+  row: { flexDirection: 'row', justifyContent: 'space-between', gap: 10 },
+  halfInputContainer: { flex: 1 },
+
   selectInput: {
     borderWidth: 1, borderColor: '#fff', padding: 14, marginBottom: 10,
     borderRadius: 8, backgroundColor: '#fff',
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
   },
 
-  // Estilo do Checkbox
   checkboxContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 20, marginBottom: 10 },
   checkbox: {
     width: 22, height: 22, borderRadius: 4, borderWidth: 2, borderColor: '#FFF',
@@ -304,22 +381,19 @@ const styles = StyleSheet.create({
   checkboxChecked: { backgroundColor: '#E85D2A', borderColor: '#E85D2A' },
   checkboxText: { color: '#FFF', fontSize: 14 },
 
-  // Botão Cadastrar
   button: { padding: 16, borderRadius: 8, alignItems: 'center', marginTop: 20, elevation: 3 },
   buttonText: { fontWeight: 'bold', fontSize: 16 },
 
   linkButton: { padding: 15, alignItems: 'center', marginTop: 10 },
   linkText: { color: '#fff', fontWeight: 'bold', textDecorationLine: 'underline' },
 
-  // Estilos dos Modais
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', padding: 20 },
   modalContent: { backgroundColor: '#FFF', borderRadius: 16, width: '100%', padding: 20, elevation: 5 },
   modalTitle: { fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 15, textAlign: 'center' },
   
   modalOption: { paddingVertical: 15 },
-  modalOptionDisabled: { opacity: 0.5 }, // Deixa a opção com aparência desabilitada
+  modalOptionDisabled: { opacity: 0.5 }, 
 
-  // Estilos do texto da Política
   politicaTitulo: { fontSize: 16, fontWeight: 'bold', color: '#333', marginTop: 15, marginBottom: 5 },
   politicaTexto: { fontSize: 14, color: '#666', lineHeight: 22, marginBottom: 10 },
 });
