@@ -116,6 +116,7 @@ npm run android
 | Perfil | Email | Senha |
 |--------|-------|-------|
 | **Voluntário** | `ana@gmail.com` | 12345678 |
+| **Voluntário** | `isismodd@gmail.com` | 12345678 |
 
 ## Dependências Principais
 ```
