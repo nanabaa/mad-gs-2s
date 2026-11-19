@@ -6,7 +6,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { authService } from '../../services/authService'; 
 
-// Função simples para formatar CPF
 const formatarCPF = (texto: string) => {
   const apenasNumeros = texto.replace(/\D/g, '');
   return apenasNumeros
@@ -16,7 +15,6 @@ const formatarCPF = (texto: string) => {
     .replace(/(-\d{2})\d+?$/, '$1');
 };
 
-// Função simples para formatar Data (DD/MM/AAAA)
 const formatarData = (texto: string) => {
   const apenasNumeros = texto.replace(/\D/g, '');
   return apenasNumeros
@@ -29,7 +27,6 @@ export default function CadastroScreen() {
   const navigation = useNavigation<any>();
   const [loading, setLoading] = useState(false);
   
-  // Estados do Formulário
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
@@ -42,13 +39,11 @@ export default function CadastroScreen() {
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [tipoConta, setTipoConta] = useState('VOLUNTARIO'); 
   
-  // Estados dos Modais
   const [modalTipoVisible, setModalTipoVisible] = useState(false);
   const [modalPoliticaVisible, setModalPoliticaVisible] = useState(false);
   const [aceitouPolitica, setAceitouPolitica] = useState(false);
 
   const handleCadastrar = async () => {
-    // Validações
     if (!nome || !email || !senha || !confirmarSenha || !telefone || !cpf || !dataNascimento || !estado || !cidade) {
       Alert.alert('Erro', 'Preencha todos os campos obrigatórios (*).');
       return;
@@ -107,7 +102,7 @@ export default function CadastroScreen() {
         <Text style={styles.title}>Criar Conta</Text>
         <Text style={styles.subtitle}>Preencha os dados para se cadastrar</Text>
 
-        {/* --- BOTÃO DO TOGGLE DE CONTA --- */}
+        {}
         <Text style={styles.label}>Como você quer participar?</Text>
         <TouchableOpacity 
           style={styles.selectInput} 
@@ -119,7 +114,7 @@ export default function CadastroScreen() {
           <Text style={{ color: '#999' }}>▼</Text>
         </TouchableOpacity>
 
-        {/* --- CAMPOS DO FORMULÁRIO --- */}
+        {}
         <Text style={styles.label}>Nome completo *</Text>
         <TextInput
           style={styles.input}
@@ -172,7 +167,7 @@ export default function CadastroScreen() {
           keyboardType="phone-pad"
         />
 
-        {/* LINHA COM ESTADO E CIDADE */}
+        {}
         <View style={styles.row}>
           <View style={styles.halfInputContainer}>
             <Text style={styles.label}>Estado (UF) *</Text>
@@ -227,7 +222,7 @@ export default function CadastroScreen() {
           secureTextEntry
         />
 
-        {/* --- CHECKBOX DE POLÍTICA --- */}
+        {}
         <TouchableOpacity 
           style={styles.checkboxContainer} 
           onPress={() => {
@@ -244,7 +239,7 @@ export default function CadastroScreen() {
           <Text style={styles.checkboxText}>Li e concordo com a Política de Uso.</Text>
         </TouchableOpacity>
 
-        {/* --- BOTÃO CADASTRAR --- */}
+        {}
         <TouchableOpacity 
           style={[styles.button, { backgroundColor: '#F9F9F9' }]} 
           onPress={handleCadastrar} 
@@ -262,7 +257,7 @@ export default function CadastroScreen() {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* MODAL 1: SELEÇÃO DO TIPO DE CONTA */}
+      {}
       <Modal visible={modalTipoVisible} transparent animationType="fade">
         <Pressable style={styles.modalOverlay} onPress={() => setModalTipoVisible(false)}>
           <View style={styles.modalContent}>
@@ -289,7 +284,7 @@ export default function CadastroScreen() {
         </Pressable>
       </Modal>
 
-      {/* MODAL 2: POLÍTICA DE USO */}
+      {}
       <Modal visible={modalPoliticaVisible} transparent animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { padding: 0, maxHeight: '80%' }]}>
@@ -363,7 +358,6 @@ const styles = StyleSheet.create({
     borderRadius: 8, fontSize: 16, backgroundColor: '#fff', color: '#333',
   },
 
-  // Estilos para a linha de Estado e Cidade
   row: { flexDirection: 'row', justifyContent: 'space-between', gap: 10 },
   halfInputContainer: { flex: 1 },
 

@@ -1,4 +1,3 @@
-// src/view/login/LoginScreen.tsx
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
@@ -21,19 +20,19 @@ export default function LoginScreen() {
 
   return (
     <ImageBackground
-      source={require('../../../assets/loginBG.jpg')} // Verifique se essa imagem ainda existe
+      source={require('../../../assets/loginBG.jpg')}
       style={styles.background}
       resizeMode="cover"
     >
-      {/* Overlay escuro para dar contraste com o texto */}
+      {}
       <View style={styles.overlay} />
 
       <View style={styles.container}>
         
-        {/* LOGO NO LUGAR DO TEXTO */}
+        {}
         <View style={styles.logoContainer}>
           <Image
-            source={require('../../../assets/Logo.png')} // ⚠️ Verifique o caminho da sua Logo
+            source={require('../../../assets/Logo.png')} 
             style={styles.logo}
             resizeMode="contain"
           />
@@ -60,7 +59,7 @@ export default function LoginScreen() {
           secureTextEntry
         />
 
-        {/* BOTÃO ENTRAR */}
+        {}
         <TouchableOpacity 
           style={[styles.button, { backgroundColor: '#F9F9F9' }]} 
           onPress={handleLogin} 
@@ -96,16 +95,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 24,
   },
-  // --- ESTILOS DA LOGO ---
   logoContainer: {
     alignItems: 'center',
     marginBottom: 10,
   },
   logo: {
-    width: 420, // Largura da logo (ajuste conforme a proporção da sua imagem)
-    height: 280, // Altura da logo
+    width: 420, 
+    height: 280, 
   },
-  // ------------------------
   subtitle: {
     fontSize: 16,
     color: '#E0E0E0',

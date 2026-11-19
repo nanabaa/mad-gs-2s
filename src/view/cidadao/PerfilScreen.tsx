@@ -43,7 +43,7 @@ export default function PerfilScreen() {
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
       
-      {/* FOTO DE PERFIL */}
+      {}
       <View style={[styles.sectionCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Foto de perfil</Text>
         <Text style={[styles.sectionSubtitle, { color: colors.textSecondary }]}>Adicione uma foto para que as pessoas possam reconhecer você.</Text>
@@ -86,7 +86,7 @@ export default function PerfilScreen() {
         </View>
       </View>
 
-      {/* DADOS PESSOAIS */}
+      {}
       <View style={[styles.sectionCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Informações de Contato</Text>
         <Text style={[styles.sectionSubtitle, { color: colors.textSecondary }]}>Seus dados cadastrais atuais.</Text>
@@ -105,7 +105,7 @@ export default function PerfilScreen() {
           <Text style={[styles.infoValue, { color: colors.text }]}>{user?.email || 'Não informado'}</Text>
         </View>
 
-        {/* BOTÃO SOBRE (Fundo Laranja) */}
+        {}
         <TouchableOpacity 
           style={[styles.sobreButton, { backgroundColor: colors.primary }]}
           onPress={() => navigation.navigate('Sobre')}
@@ -113,7 +113,7 @@ export default function PerfilScreen() {
           <Text style={styles.sobreButtonText}>Sobre o App</Text>
         </TouchableOpacity>
 
-        {/* BOTÃO LOGOUT (Fundo Cinza Claro, Texto Laranja) */}
+        {}
         <TouchableOpacity 
           style={[styles.logoutButton, { backgroundColor: colors.border }]} 
           onPress={logout}

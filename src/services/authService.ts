@@ -1,4 +1,3 @@
-// src/services/authService.ts
 import api from './api';
 
 export type CadastroPayload = {
@@ -23,14 +22,12 @@ export const authService = {
   },
 
   cadastrar: async (payload: CadastroPayload) => {
-    // Função para converter 23/02/2000 em 2000-02-23
     let dataFormatadaParaJava = payload.dataNascimento || '';
     if (dataFormatadaParaJava.includes('/')) {
       const [dia, mes, ano] = dataFormatadaParaJava.split('/');
       dataFormatadaParaJava = `${ano}-${mes}-${dia}`;
     }
 
-    // Monta o objeto exatamente como o Java espera
     const body = {
       nome: payload.nome,
       email: payload.email,
@@ -40,7 +37,7 @@ export const authService = {
       telefone: payload.telefone || '',
       aceitouPolitica: payload.aceitouPolitica,
       cpf: payload.cpf || '',
-      dataNascimento: dataFormatadaParaJava, // <-- Enviando no formato AAAA-MM-DD
+      dataNascimento: dataFormatadaParaJava, 
       estado: payload.estado || '',
       cidade: payload.cidade || '',
       bairro: payload.bairro || '',

@@ -1,4 +1,3 @@
-// src/view/vet/SobreScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -14,11 +13,11 @@ export default function SobreScreen() {
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
       
-      {/* Card Principal */}
+      {}
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <View style={styles.logoContainer}>
           <Image
-            source={require('../../../assets/Logo.png')} // ⚠️ Ajuste se necessário
+            source={require('../../../assets/Logo.png')}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -57,7 +56,7 @@ export default function SobreScreen() {
 
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
         
-        {/* Integrantes */}
+        {}
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Desenvolvido por:</Text>
         <Text style={[styles.devText, { color: colors.textSecondary }]}>Ana Clara de Oliveira Nascimento</Text>
         <Text style={[styles.devText, { color: colors.textSecondary }]}>Augusto Bonomo Junior</Text>
@@ -67,7 +66,7 @@ export default function SobreScreen() {
 
         <View style={[styles.divider, { backgroundColor: colors.border, marginTop: 20 }]} />
 
-        {/* Texto da Política de Uso Adicionado Diretamente */}
+        {}
         <Text style={[styles.sectionTitle, { color: colors.primary, fontSize: 14, letterSpacing: 1 }]}>POLÍTICA DE USO</Text>
         <Text style={[styles.subtitle, { color: colors.text, textAlign: 'left', fontWeight: 'bold', marginBottom: 15 }]}>
           Queremos manter uma comunidade segura, respeitosa e confiável.

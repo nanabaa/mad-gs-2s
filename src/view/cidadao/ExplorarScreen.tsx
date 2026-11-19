@@ -1,4 +1,3 @@
-// src/view/cidadao/ExplorarScreen.tsx
 import React, { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useTheme } from '../../control/ThemeContext';
@@ -65,7 +64,7 @@ export default function ExplorarScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Barra de Busca */}
+      {}
       <View style={[styles.searchContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <TextInput 
           style={[styles.searchInput, { color: colors.text }]} 
@@ -77,10 +76,10 @@ export default function ExplorarScreen() {
         <Text style={styles.searchIcon}>🔍</Text>
       </View>
 
-      {/* Categorias */}
+      {}
       <Text style={[styles.sectionTitle, { color: colors.text }]}>Explore por categoria</Text>
       
-      {/* CORREÇÃO: altura fixa no wrapper e alignItems center */}
+      {}
       <View style={{ height: 50, marginBottom: 20 }}>
         <ScrollView 
           horizontal 
@@ -111,7 +110,7 @@ export default function ExplorarScreen() {
         </ScrollView>
       </View>
 
-      {/* Filtros de Localização */}
+      {}
       <View style={styles.filterContainer}>
         <View style={[styles.locationInputContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <Text style={styles.locationIcon}>📍</Text>
@@ -128,7 +127,7 @@ export default function ExplorarScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Lista de Resultados */}
+      {}
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }} showsVerticalScrollIndicator={false}>
         {isLoading && <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 20 }} />}
         
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, 
     paddingVertical: 10, 
     marginRight: 10,
-    height: 40, // Altura fixa para as tags
+    height: 40, 
   },
   categoryEmoji: { marginRight: 6, fontSize: 16 },
   categoryText: { fontSize: 14, fontWeight: '500' },

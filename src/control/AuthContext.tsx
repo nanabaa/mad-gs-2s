@@ -9,7 +9,7 @@ type User = {
   email: string;
   role: string; 
   fotoUrl?: string | null; 
-  telefone?: string; // <-- Campo para armazenar o telefone
+  telefone?: string; 
 };
 
 type AuthContextData = {
@@ -38,7 +38,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (token && userData) {
         const parsedUser: User = JSON.parse(userData);
         
-        // Resgata a foto local salva para este usuário específico
         const fotoLocal = await AsyncStorage.getItem(`@ConectaSocial:foto_${parsedUser.id}`);
         
         if (fotoLocal) {
@@ -65,7 +64,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return false;
       }
 
-      // Busca a foto salva localmente para este usuário antes de montar o objeto final
       const fotoLocalSalva = await AsyncStorage.getItem(`@ConectaSocial:foto_${data.user.id}`);
 
       const loggedUser: User = {
@@ -74,7 +72,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email: data.user.email,
         role: data.user.role,
         fotoUrl: fotoLocalSalva || null,
-        // ⚠️ Pega o telefone do retorno da API Java
         telefone: data.user.telefone || '', 
       };
 
@@ -107,7 +104,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // --- FUNÇÃO PARA ATUALIZAR A FOTO LOCALMENTE ---
   const atualizarFotoContexto = async (novaFotoUrl: string) => {
     if (user) {
       const usuarioAtualizado = { ...user, fotoUrl: novaFotoUrl };
@@ -124,7 +120,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await AsyncStorage.removeItem('@ConectaSocial:token');
       await AsyncStorage.removeItem('@ConectaSocial:userData');
       
-      // A foto NÃO é removida aqui! A chave `@ConectaSocial:foto_${user.id}` fica salva.
       
       setUser(null); 
     } catch (e) {

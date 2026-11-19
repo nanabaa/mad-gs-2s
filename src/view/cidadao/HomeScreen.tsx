@@ -1,5 +1,4 @@
-// src/view/cidadao/HomeScreen.tsx
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useTheme } from '../../control/ThemeContext';
 import { useCampanhas } from '../../hooks/useCampanhas';
@@ -7,6 +6,12 @@ import { useCampanhas } from '../../hooks/useCampanhas';
 export default function HomeScreen() {
   const { colors } = useTheme();
   const { data: campanhas, isLoading, isError, refetch } = useCampanhas();
+  
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const handleExplorar = () => {
+    scrollViewRef.current?.scrollTo({ y: 350, animated: true });
+  };
 
   const renderCard = (item: any) => {
     return (
@@ -45,7 +50,11 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
+    <ScrollView 
+      ref={scrollViewRef} 
+      style={[styles.container, { backgroundColor: colors.background }]} 
+      showsVerticalScrollIndicator={false}
+    >
       
       <ImageBackground 
         source={{ uri: 'https://images.unsplash.com/photo-1593113589914-07599018dd2a?q=80&w=1000&auto=format&fit=crop' }} 
@@ -61,8 +70,10 @@ export default function HomeScreen() {
           <Text style={styles.heroSubtitle}>
             Descubra iniciativas, encontre pessoas e faça parte de mudanças reais na sua comunidade.
           </Text>
-          <TouchableOpacity style={styles.heroButton}>
-            <Text style={styles.heroButtonText}>Explorar campanhas →</Text>
+          
+          {}
+          <TouchableOpacity style={styles.heroButton} onPress={handleExplorar}>
+            <Text style={styles.heroButtonText}>Explorar campanhas</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -93,7 +104,6 @@ export default function HomeScreen() {
   );
 }
 
-// ... mantenha os mesmos styles da resposta anterior ...
 const styles = StyleSheet.create({
   container: { flex: 1 },
   heroBanner: { margin: 16, borderRadius: 16, overflow: 'hidden', minHeight: 320 },

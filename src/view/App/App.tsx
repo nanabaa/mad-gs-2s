@@ -6,11 +6,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-// Contextos
 import { AuthProvider, useAuth } from '../../control/AuthContext';
 import { ThemeProvider, useTheme } from '../../control/ThemeContext';
 
-// Telas
 import LoginScreen from '../../view/login/LoginScreen';
 import CadastroScreen from '../../view/login/CadastroScreen';
 import HomeScreen from '../../view/cidadao/HomeScreen';
@@ -26,7 +24,6 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false, staleTime: 1000 * 60 * 5 } },
 });
 
-// --- COMPONENTE DO HEADER PERSONALIZADO ---
 function HeaderLogo() {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
@@ -37,7 +34,7 @@ function HeaderLogo() {
       { paddingTop: insets.top + 10, backgroundColor: colors.header, borderBottomColor: colors.border }
     ]}>
       <Image 
-        source={require('../../../assets/Logo.png')} // ⚠️ Ajuste o caminho se necessário
+        source={require('../../../assets/Logo.png')} 
         style={styles.logo}
         resizeMode="contain"
       />
@@ -45,7 +42,6 @@ function HeaderLogo() {
   );
 }
 
-// --- COMPONENTE DE NAVEGAÇÃO POR ABAS (LOGADO) ---
 function MainTabs() {
   const insets = useSafeAreaInsets(); 
   const { colors } = useTheme();
@@ -75,7 +71,6 @@ function MainTabs() {
   );
 }
 
-// --- COMPONENTE PRINCIPAL DE NAVEGAÇÃO ---
 function AppNavigator() {
   const { user, loading } = useAuth();
   const { colors } = useTheme();
@@ -119,7 +114,6 @@ function AppNavigator() {
   );
 }
 
-// --- COMPONENTE RAIZ ---
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -134,7 +128,6 @@ export default function App() {
   );
 }
 
-// --- ESTILOS DO HEADER (Declarado apenas UMA vez) ---
 const styles = StyleSheet.create({
   headerContainer: {
     width: '100%',
