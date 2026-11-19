@@ -22,49 +22,50 @@ export default function ExplorarScreen() {
   const [categoriaAtiva, setCategoriaAtiva] = useState('Todas');
   const [regiao, setRegiao] = useState('');
 
-  // A MÁGICA DA BUSCA ACONTECE AQUI:
   const campanhasFiltradas = useMemo(() => {
     if (!campanhas) return [];
 
-    return campanhas.filter((campanha) => {
-      const matchTexto = campanha.titulo.toLowerCase().includes(busca.toLowerCase()) || 
-                         campanha.descricao.toLowerCase().includes(busca.toLowerCase()) ||
-                         campanha.ongNome?.toLowerCase().includes(busca.toLowerCase());
+    return campanhas.filter((item) => {
+      const matchTexto = item.titulo.toLowerCase().includes(busca.toLowerCase()) || 
+                         item.descricao.toLowerCase().includes(busca.toLowerCase()) ||
+                         item.nomeOng?.toLowerCase().includes(busca.toLowerCase());
       
-      const matchCategoria = categoriaAtiva === 'Todas' || campanha.categoria === categoriaAtiva;
-      const matchRegiao = campanha.regiao?.toLowerCase().includes(regiao.toLowerCase());
+      const matchCategoria = categoriaAtiva === 'Todas' || item.categoria === categoriaAtiva;
+      const matchRegiao = item.local?.toLowerCase().includes(regiao.toLowerCase());
 
       return matchTexto && matchCategoria && matchRegiao;
     });
   }, [campanhas, busca, categoriaAtiva, regiao]);
 
-  const renderCard = (item: any) => (
-    <View key={item.id} style={[styles.campaignCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-      <Image source={{ uri: item.imagemUrl || 'https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?q=80&w=500&auto=format&fit=crop' }} style={styles.campaignImage} />
-      <View style={styles.cardContent}>
-        <View style={styles.ongRow}>
-          <Text style={{ fontSize: 10 }}>🤝</Text>
-          <Text style={[styles.ongText, { color: colors.textSecondary }]}>{item.ongNome || 'ONG Verificada'}</Text>
-          <Text style={styles.verifiedText}>✓</Text>
-        </View>
-        <Text style={[styles.campaignTitle, { color: colors.text }]}>{item.titulo}</Text>
-        <Text style={[styles.campaignDesc, { color: colors.textSecondary }]} numberOfLines={2}>{item.descricao}</Text>
-        
-        <View style={styles.metaRow}>
-          <View style={[styles.tagText, { backgroundColor: colors.background, borderColor: colors.border }]}>
-            <Text style={[styles.tagTextLabel, { color: colors.textSecondary }]}>{item.regiao}</Text>
+  const renderCard = (item: any) => {
+    return (
+      <View key={item.id} style={[styles.campaignCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <Image source={{ uri: 'https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?q=80&w=500&auto=format&fit=crop' }} style={styles.campaignImage} />
+        <View style={styles.cardContent}>
+          <View style={styles.ongRow}>
+            <Text style={{ fontSize: 10 }}>🤝</Text>
+            <Text style={[styles.ongText, { color: colors.textSecondary }]}>{item.nomeOng || 'ONG Verificada'}</Text>
+            <Text style={styles.verifiedText}>✓</Text>
           </View>
-          <View style={[styles.tagText, { backgroundColor: colors.background, borderColor: colors.border }]}>
-            <Text style={[styles.tagTextLabel, { color: colors.textSecondary }]}>{item.categoria}</Text>
+          <Text style={[styles.campaignTitle, { color: colors.text }]}>{item.titulo}</Text>
+          <Text style={[styles.campaignDesc, { color: colors.textSecondary }]} numberOfLines={2}>{item.descricao}</Text>
+          
+          <View style={styles.metaRow}>
+            <View style={[styles.tagText, { backgroundColor: colors.background, borderColor: colors.border }]}>
+              <Text style={[styles.tagTextLabel, { color: colors.textSecondary }]}>{item.local}</Text>
+            </View>
+            <View style={[styles.tagText, { backgroundColor: colors.background, borderColor: colors.border }]}>
+              <Text style={[styles.tagTextLabel, { color: colors.textSecondary }]}>{item.categoria}</Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Barra de Busca Funcional */}
+      {/* ... (Código da barra de busca, categorias e input de região igual ao anterior) ... */}
       <View style={[styles.searchContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <TextInput 
           style={[styles.searchInput, { color: colors.text }]} 
@@ -76,7 +77,6 @@ export default function ExplorarScreen() {
         <Text style={styles.searchIcon}>🔍</Text>
       </View>
 
-      {/* Categorias Funcionais */}
       <Text style={[styles.sectionTitle, { color: colors.text }]}>Explore por categoria</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll} contentContainerStyle={{ paddingHorizontal: 16 }}>
         {categorias.map((cat) => {
@@ -94,7 +94,6 @@ export default function ExplorarScreen() {
         })}
       </ScrollView>
 
-      {/* Filtro de Localização Funcional */}
       <View style={styles.filterContainer}>
         <View style={[styles.locationInputContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <Text style={styles.locationIcon}>📍</Text>
@@ -111,7 +110,6 @@ export default function ExplorarScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Lista de Resultados */}
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }} showsVerticalScrollIndicator={false}>
         {isLoading && <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 20 }} />}
         
@@ -134,6 +132,7 @@ export default function ExplorarScreen() {
   );
 }
 
+// ... mantenha os mesmos styles da resposta anterior ...
 const styles = StyleSheet.create({
   container: { flex: 1 },
   searchContainer: { flexDirection: 'row', alignItems: 'center', margin: 16, borderRadius: 12, paddingHorizontal: 16, borderWidth: 1 },
@@ -149,7 +148,6 @@ const styles = StyleSheet.create({
   locationIcon: { marginRight: 8 },
   locationInput: { flex: 1, paddingVertical: 12, fontSize: 14 },
   clearFilterText: { fontWeight: 'bold', fontSize: 14, textAlign: 'center' },
-  
   campaignCard: { borderRadius: 12, marginBottom: 16, overflow: 'hidden', borderWidth: 1 },
   campaignImage: { width: '100%', height: 140 },
   cardContent: { padding: 12 },
@@ -161,6 +159,5 @@ const styles = StyleSheet.create({
   metaRow: { flexDirection: 'row', gap: 8, paddingTop: 12, borderTopWidth: 1, borderTopColor: '#EEE' },
   tagText: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12, borderWidth: 1 },
   tagTextLabel: { fontSize: 11 },
-  
   resultsText: { textAlign: 'center', marginTop: 20 }
 });

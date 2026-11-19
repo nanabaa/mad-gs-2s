@@ -8,45 +8,62 @@ export default function HomeScreen() {
   const { colors } = useTheme();
   const { data: campanhas, isLoading, isError, refetch } = useCampanhas();
 
-  const renderCard = (item: any) => (
-    <View key={item.id} style={[styles.campaignCard, { backgroundColor: colors.card }]}>
-      <Image source={{ uri: item.imagemUrl || 'https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?q=80&w=500&auto=format&fit=crop' }} style={styles.campaignImage} />
-      
-      <View style={styles.cardContent}>
-        <View style={styles.ongRow}>
-          <View style={styles.ongIconContainer}><Text style={{ fontSize: 10 }}>🤝</Text></View>
-          <Text style={[styles.ongText, { color: colors.textSecondary }]}>{item.ongNome || 'ONG Verificada'}</Text>
-          <Text style={styles.verifiedText}>✓</Text>
-        </View>
-
-        <Text style={[styles.campaignTitle, { color: colors.text }]}>{item.titulo}</Text>
-        <Text style={[styles.campaignDesc, { color: colors.textSecondary }]} numberOfLines={3}>{item.descricao}</Text>
-
-        <View style={[styles.metaRow, { borderTopColor: colors.border, borderBottomColor: colors.border }]}>
-          <View style={[styles.tagText, { backgroundColor: colors.background, borderColor: colors.border }]}>
-            <Text style={[styles.tagTextLabel, { color: colors.textSecondary }]}>{item.regiao}</Text>
+  const renderCard = (item: any) => {
+    return (
+      <View key={item.id} style={[styles.campaignCard, { backgroundColor: colors.card }]}>
+        <Image 
+          source={{ uri: 'https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?q=80&w=500&auto=format&fit=crop' }} 
+          style={styles.campaignImage} 
+        />
+        
+        <View style={styles.cardContent}>
+          <View style={styles.ongRow}>
+            <View style={styles.ongIconContainer}><Text style={{ fontSize: 10 }}>🤝</Text></View>
+            <Text style={[styles.ongText, { color: colors.textSecondary }]}>{item.nomeOng || 'ONG Verificada'}</Text>
+            <Text style={styles.verifiedText}>✓</Text>
           </View>
-          <View style={[styles.tagText, { backgroundColor: colors.background, borderColor: colors.border }]}>
-            <Text style={[styles.tagTextLabel, { color: colors.textSecondary }]}>{item.categoria}</Text>
-          </View>
-        </View>
 
-        <TouchableOpacity style={styles.cardFooter}>
-          <Text style={[styles.cardButtonText, { color: colors.textSecondary }]}>Conheça essa causa</Text>
-          <Text style={[styles.cardButtonText, { color: colors.primary }]}>✓ Interesse registrado</Text>
-        </TouchableOpacity>
+          <Text style={[styles.campaignTitle, { color: colors.text }]}>{item.titulo}</Text>
+          <Text style={[styles.campaignDesc, { color: colors.textSecondary }]} numberOfLines={3}>{item.descricao}</Text>
+
+          <View style={[styles.metaRow, { borderTopColor: colors.border, borderBottomColor: colors.border }]}>
+            <View style={[styles.tagText, { backgroundColor: colors.background, borderColor: colors.border }]}>
+              <Text style={[styles.tagTextLabel, { color: colors.textSecondary }]}>📍 {item.local}</Text>
+            </View>
+            <View style={[styles.tagText, { backgroundColor: colors.background, borderColor: colors.border }]}>
+              <Text style={[styles.tagTextLabel, { color: colors.textSecondary }]}>{item.categoria}</Text>
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.cardFooter}>
+            <Text style={[styles.cardButtonText, { color: colors.textSecondary }]}>Conheça essa causa</Text>
+            <Text style={[styles.cardButtonText, { color: colors.primary }]}>✓ Interesse registrado</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
-      <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1593113589914-07599018dd2a?q=80&w=1000&auto=format&fit=crop' }} style={styles.heroBanner} imageStyle={{ borderRadius: 16 }}>
+      
+      <ImageBackground 
+        source={{ uri: 'https://images.unsplash.com/photo-1593113589914-07599018dd2a?q=80&w=1000&auto=format&fit=crop' }} 
+        style={styles.heroBanner}
+        imageStyle={{ borderRadius: 16 }}
+      >
         <View style={styles.overlay}>
           <Text style={styles.heroTag}>CONECTANDO BOAS AÇÕES</Text>
-          <Text style={styles.heroTitle}>Uma conexão pode {'\n'}<Text style={styles.heroTitleHighlight}>transformar o mundo.</Text></Text>
-          <Text style={styles.heroSubtitle}>Descubra iniciativas, encontre pessoas e faça parte de mudanças reais na sua comunidade.</Text>
-          <TouchableOpacity style={styles.heroButton}><Text style={styles.heroButtonText}>Explorar campanhas →</Text></TouchableOpacity>
+          <Text style={styles.heroTitle}>
+            Uma conexão pode {'\n'}
+            <Text style={styles.heroTitleHighlight}>transformar o mundo.</Text>
+          </Text>
+          <Text style={styles.heroSubtitle}>
+            Descubra iniciativas, encontre pessoas e faça parte de mudanças reais na sua comunidade.
+          </Text>
+          <TouchableOpacity style={styles.heroButton}>
+            <Text style={styles.heroButtonText}>Explorar campanhas →</Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
 
@@ -65,7 +82,9 @@ export default function HomeScreen() {
         )}
 
         {!isLoading && !isError && campanhas?.length === 0 && (
-          <Text style={{ textAlign: 'center', color: colors.textSecondary, marginTop: 20 }}>Nenhuma campanha encontrada no momento.</Text>
+          <Text style={{ textAlign: 'center', color: colors.textSecondary, marginTop: 20 }}>
+            Nenhuma campanha encontrada no momento.
+          </Text>
         )}
 
         {!isLoading && !isError && campanhas?.map((item) => renderCard(item))}
@@ -74,6 +93,7 @@ export default function HomeScreen() {
   );
 }
 
+// ... mantenha os mesmos styles da resposta anterior ...
 const styles = StyleSheet.create({
   container: { flex: 1 },
   heroBanner: { margin: 16, borderRadius: 16, overflow: 'hidden', minHeight: 320 },
