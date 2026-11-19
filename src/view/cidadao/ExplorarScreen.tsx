@@ -65,7 +65,7 @@ export default function ExplorarScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* ... (Código da barra de busca, categorias e input de região igual ao anterior) ... */}
+      {/* Barra de Busca */}
       <View style={[styles.searchContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <TextInput 
           style={[styles.searchInput, { color: colors.text }]} 
@@ -77,23 +77,41 @@ export default function ExplorarScreen() {
         <Text style={styles.searchIcon}>🔍</Text>
       </View>
 
+      {/* Categorias */}
       <Text style={[styles.sectionTitle, { color: colors.text }]}>Explore por categoria</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll} contentContainerStyle={{ paddingHorizontal: 16 }}>
-        {categorias.map((cat) => {
-          const isActive = categoriaAtiva === cat.id;
-          return (
-            <TouchableOpacity 
-              key={cat.id} 
-              style={[styles.categoryChip, { backgroundColor: isActive ? colors.primaryLight : colors.card, borderColor: isActive ? colors.primary : colors.border }]}
-              onPress={() => setCategoriaAtiva(cat.id)}
-            >
-              <Text style={styles.categoryEmoji}>{cat.emoji}</Text>
-              <Text style={[styles.categoryText, { color: isActive ? colors.primary : colors.textSecondary }]}>{cat.label}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+      
+      {/* CORREÇÃO: altura fixa no wrapper e alignItems center */}
+      <View style={{ height: 50, marginBottom: 20 }}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          contentContainerStyle={{ paddingHorizontal: 16, alignItems: 'center' }}
+        >
+          {categorias.map((cat) => {
+            const isActive = categoriaAtiva === cat.id;
+            return (
+              <TouchableOpacity 
+                key={cat.id} 
+                style={[
+                  styles.categoryChip, 
+                  { 
+                    backgroundColor: isActive ? colors.primaryLight : colors.card, 
+                    borderColor: isActive ? colors.primary : colors.border 
+                  }
+                ]}
+                onPress={() => setCategoriaAtiva(cat.id)}
+              >
+                <Text style={styles.categoryEmoji}>{cat.emoji}</Text>
+                <Text style={[styles.categoryText, { color: isActive ? colors.primary : colors.textSecondary }]}>
+                  {cat.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
 
+      {/* Filtros de Localização */}
       <View style={styles.filterContainer}>
         <View style={[styles.locationInputContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <Text style={styles.locationIcon}>📍</Text>
@@ -110,6 +128,7 @@ export default function ExplorarScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* Lista de Resultados */}
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }} showsVerticalScrollIndicator={false}>
         {isLoading && <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 20 }} />}
         
@@ -132,17 +151,26 @@ export default function ExplorarScreen() {
   );
 }
 
-// ... mantenha os mesmos styles da resposta anterior ...
 const styles = StyleSheet.create({
   container: { flex: 1 },
   searchContainer: { flexDirection: 'row', alignItems: 'center', margin: 16, borderRadius: 12, paddingHorizontal: 16, borderWidth: 1 },
   searchInput: { flex: 1, paddingVertical: 14, fontSize: 15 },
   searchIcon: { fontSize: 18, color: '#999' },
   sectionTitle: { fontSize: 16, fontWeight: 'bold', marginLeft: 16, marginBottom: 12 },
-  categoriesScroll: { marginBottom: 20, maxHeight: 50 },
-  categoryChip: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 20, paddingHorizontal: 16, paddingVertical: 10, marginRight: 10 },
+  
+  categoryChip: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    borderWidth: 1, 
+    borderRadius: 20, 
+    paddingHorizontal: 16, 
+    paddingVertical: 10, 
+    marginRight: 10,
+    height: 40, // Altura fixa para as tags
+  },
   categoryEmoji: { marginRight: 6, fontSize: 16 },
   categoryText: { fontSize: 14, fontWeight: '500' },
+
   filterContainer: { paddingHorizontal: 16, marginBottom: 20 },
   locationInputContainer: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, marginBottom: 12 },
   locationIcon: { marginRight: 8 },
