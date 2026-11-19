@@ -9,6 +9,7 @@ type User = {
   email: string;
   role: string; 
   fotoUrl?: string | null; 
+  telefone?: string; // <-- Campo para armazenar o telefone
 };
 
 type AuthContextData = {
@@ -37,8 +38,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (token && userData) {
         const parsedUser: User = JSON.parse(userData);
         
-        // Garante que ao abrir o app, a foto salva seja carregada
+        // Resgata a foto local salva para este usuário específico
         const fotoLocal = await AsyncStorage.getItem(`@ConectaSocial:foto_${parsedUser.id}`);
+        
         if (fotoLocal) {
           parsedUser.fotoUrl = fotoLocal;
         }
@@ -59,11 +61,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await authService.login(email, senha);
 
       if (!data?.token || !data?.user) {
-        Alert.alert('Erro', 'Falha na autenticação.');
+        Alert.alert('Erro', 'Falha na autenticação. Verifique os dados e tente novamente.');
         return false;
       }
 
-      // ⚠️ AQUI ESTAVA O ERRO: Buscamos a foto ANTES de montar o objeto final
+      // Busca a foto salva localmente para este usuário antes de montar o objeto final
       const fotoLocalSalva = await AsyncStorage.getItem(`@ConectaSocial:foto_${data.user.id}`);
 
       const loggedUser: User = {
@@ -71,7 +73,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         nome: data.user.nome,
         email: data.user.email,
         role: data.user.role,
-        fotoUrl: fotoLocalSalva || null, // Prioriza a foto local
+        fotoUrl: fotoLocalSalva || null,
+        // ⚠️ Pega o telefone do retorno da API Java
+        telefone: data.user.telefone || '', 
       };
 
       await AsyncStorage.setItem('@ConectaSocial:token', data.token);
@@ -81,21 +85,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return true;
 
     } catch (e: any) {
+      console.log('--- ERRO NO LOGIN ---');
+      
       let mensagemErro = 'Não foi possível conectar ao servidor.';
       if (e.response) {
-        mensagemErro = e.response.data?.message || e.response.data?.erro || `Erro ${e.response.status}`;
+        mensagemErro = e.response.data?.message 
+                    || e.response.data?.erro 
+                    || e.response.data?.error
+                    || `Erro ${e.response.status}: Verifique os dados informados.`;
       } else if (e.request) {
-        mensagemErro = 'Servidor não respondeu.';
+        mensagemErro = 'Servidor não respondeu. Verifique sua conexão ou se a API está online.';
       } else {
         mensagemErro = e.message;
       }
+
       Alert.alert('Falha no Login', mensagemErro);
       return false;
+
     } finally {
       setLoading(false);
     }
   };
 
+  // --- FUNÇÃO PARA ATUALIZAR A FOTO LOCALMENTE ---
   const atualizarFotoContexto = async (novaFotoUrl: string) => {
     if (user) {
       const usuarioAtualizado = { ...user, fotoUrl: novaFotoUrl };
@@ -111,8 +123,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await AsyncStorage.removeItem('@ConectaSocial:token');
       await AsyncStorage.removeItem('@ConectaSocial:userData');
-      // A foto NÃO é removida aqui
-      setUser(null);
+      
+      // A foto NÃO é removida aqui! A chave `@ConectaSocial:foto_${user.id}` fica salva.
+      
+      setUser(null); 
     } catch (e) {
       console.log('Erro ao fazer logout:', e);
     } finally {
@@ -121,7 +135,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, atualizarFotoContexto }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      loading, 
+      login, 
+      logout, 
+      atualizarFotoContexto 
+    }}>
       {children}
     </AuthContext.Provider>
   );
