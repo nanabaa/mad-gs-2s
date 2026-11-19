@@ -1,7 +1,8 @@
+// src/view/login/LoginScreen.tsx
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
-  Alert, ActivityIndicator, ImageBackground,
+  Alert, ActivityIndicator, ImageBackground, Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../control/AuthContext';
@@ -20,20 +21,26 @@ export default function LoginScreen() {
 
   return (
     <ImageBackground
-      source={require('../../../assets/loginBG.jpg')}
+      source={require('../../../assets/loginBG.jpg')} // Verifique se essa imagem ainda existe
       style={styles.background}
       resizeMode="cover"
     >
-      {}
+      {/* Overlay escuro para dar contraste com o texto */}
       <View style={styles.overlay} />
 
-      {}
       <View style={styles.container}>
-        <Text style={styles.title}>ClyvoPet</Text>
-        <Text style={styles.subtitle}>Conectando pessoas, ONGs e oportunidades para transformar realidades.</Text>
-        <Text style={styles.subtitle}>_________</Text>
-        <Text style={styles.subtitle}>Juntos, podemos fazer a diferença.</Text>
+        
+        {/* LOGO NO LUGAR DO TEXTO */}
+        <View style={styles.logoContainer}>
+          <Image
+            source={require('../../../assets/Logo.png')} // ⚠️ Verifique o caminho da sua Logo
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </View>
 
+        <Text style={styles.subtitle}>Conectando pessoas, ONGs e oportunidades para transformar realidades.</Text>
+        
         <TextInput
           style={styles.input}
           placeholder="Digite seu e-mail"
@@ -53,8 +60,17 @@ export default function LoginScreen() {
           secureTextEntry
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Entrar</Text>}
+        {/* BOTÃO ENTRAR */}
+        <TouchableOpacity 
+          style={[styles.button, { backgroundColor: '#F9F9F9' }]} 
+          onPress={handleLogin} 
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#E85D2A" /> 
+          ) : (
+            <Text style={[styles.buttonText, { color: '#E85D2A' }]}>Entrar</Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.linkButton} onPress={() => navigation.navigate('Cadastro')}>
@@ -73,55 +89,62 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', 
   },
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: 24,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
+  // --- ESTILOS DA LOGO ---
+  logoContainer: {
+    alignItems: 'center',
     marginBottom: 10,
   },
+  logo: {
+    width: 420, // Largura da logo (ajuste conforme a proporção da sua imagem)
+    height: 280, // Altura da logo
+  },
+  // ------------------------
   subtitle: {
     fontSize: 16,
-    color: '#e7edfd',
+    color: '#E0E0E0',
     textAlign: 'center',
     marginBottom: 40,
+    lineHeight: 22,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#fff',
-    padding: 12,
+    borderColor: '#FFF',
+    padding: 14,
     marginBottom: 15,
     borderRadius: 8,
     fontSize: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
     color: '#333',
   },
   button: {
-    backgroundColor: '#b0c5ff',
-    padding: 15,
+    padding: 16,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   buttonText: {
-    color: '#112942',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
   },
   linkButton: {
     padding: 15,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 15,
   },
   linkText: {
-    color: '#fff',
+    color: '#FFF',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },

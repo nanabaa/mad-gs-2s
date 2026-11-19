@@ -71,13 +71,22 @@ export default function PerfilScreen() {
                 <ActivityIndicator color={colors.primary} />
               ) : (
                 <>
-                  <Text style={[styles.fileButtonText, { backgroundColor: colors.background, color: colors.text }]}>Escolher arquivo</Text>
-                  <Text style={[styles.fileText, { color: colors.textSecondary }]}>Nenhum arquivo escolhido</Text>
+                  <Text style={[styles.fileButtonText, { backgroundColor: colors.background, color: colors.text }]}>
+                    Escolher arquivo
+                  </Text>
+                  <Text 
+                    style={[styles.fileText, { color: colors.textSecondary }]} 
+                    numberOfLines={2}
+                  >
+                    Nenhum arquivo escolhido
+                  </Text>
                 </>
               )}
             </TouchableOpacity>
 
-            <Text style={[styles.hintText, { color: colors.textSecondary }]}>Formatos aceitos: JPG, PNG e WebP. Tamanho máximo: 2 MB.</Text>
+            <Text style={[styles.hintText, { color: colors.textSecondary }]}>
+              Formatos aceitos: JPG, PNG e WebP. Tamanho máximo: 2 MB.
+            </Text>
           </View>
         </View>
       </View>
@@ -132,9 +141,33 @@ const styles = StyleSheet.create({
   
   photoActions: { flex: 1 },
   label: { fontSize: 14, fontWeight: 'bold', marginBottom: 8 },
-  fileButton: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 8, padding: 8, marginBottom: 8, minHeight: 40 },
-  fileButtonText: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4, fontSize: 12, marginRight: 8 },
-  fileText: { fontSize: 12 },
+  
+  // --- AJUSTES NO BOTÃO DE ARQUIVO AQUI ---
+  fileButton: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    borderWidth: 1, 
+    borderRadius: 8, 
+    padding: 8, 
+    marginBottom: 8, 
+    minHeight: 40,
+    width: '100%',
+  },
+  fileButtonText: { 
+    paddingHorizontal: 12, 
+    paddingVertical: 4, 
+    borderRadius: 4, 
+    fontSize: 12, 
+    marginRight: 8,
+    flexShrink: 0, 
+  },
+  fileText: { 
+    fontSize: 12,
+    flex: 1, 
+    flexWrap: 'wrap', 
+  },
+  // ----------------------------------------
+
   hintText: { fontSize: 12, marginBottom: 12 },
   
   roleTag: { alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12, marginBottom: 16 },

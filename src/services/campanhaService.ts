@@ -1,6 +1,5 @@
 import api from './api';
 
-// Tipagem baseada no que esperamos que o Java retorne
 export type Campanha = {
   id: number;
   titulo: string;
@@ -13,9 +12,10 @@ export type Campanha = {
 
 export const campanhaService = {
   getAll: async (): Promise<Campanha[]> => {
+    // ⚠️ Verifique se a rota no Java é /campanhas ou /causas, etc.
     const { data } = await api.get('/campanhas');
     
-    // Tratamento para caso a API use paginação (Spring Boot Page)
+    // Tratamento para Page (Spring Boot)
     if (Array.isArray(data)) return data;
     if (data && Array.isArray(data.content)) return data.content;
     
