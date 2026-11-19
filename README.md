@@ -1,4 +1,4 @@
-# ConectaSocial
+# Conecta Social
 
 > **Global Solution 2026/2 - CitizenTech**  
 > *Conectando pessoas, ONGs e oportunidades para transformar realidades.*
@@ -155,12 +155,12 @@ npm run android
 
 -Autenticação: Spring Security + JWT
 
-## Grupo do Challenge
+## Grupo da Global Solution
 Ana Clara de Oliveira Nascimento | RM 561957
 Augusto Bonomo Junior | RM 565155
 Isis Macedo | RM 561497
 Henrique Pereira | RM 565608
 Rafael Carvalho Meireles | RM 563413
 
-**Link do vídeo no YouTube:** 
+**Link do vídeo no YouTube:** https://youtu.be/iLMZPxHXLHY
 **Link do Repositório:** https://github.com/nanabaa/mad-gs-2s.git
