@@ -8,7 +8,7 @@ type User = {
   nome: string;
   email: string;
   role: string; 
-  fotoUrl?: string | null; // <-- Campo adicionado para a foto de perfil
+  fotoUrl?: string | null; 
 };
 
 type AuthContextData = {
@@ -16,7 +16,7 @@ type AuthContextData = {
   loading: boolean;
   login: (email: string, senha: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  atualizarFotoContexto: (novaFotoUrl: string) => Promise<void>; // <-- Função adicionada
+  atualizarFotoContexto: (novaFotoUrl: string) => Promise<void>; 
 };
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -35,7 +35,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userData = await AsyncStorage.getItem('@ConectaSocial:userData');
       
       if (token && userData) {
-        setUser(JSON.parse(userData));
+        const parsedUser: User = JSON.parse(userData);
+        
+        // Ao abrir o app, busca a foto local salva para este usuário
+        const fotoLocal = await AsyncStorage.getItem(`@ConectaSocial:foto_${parsedUser.id}`);
+        
+        if (fotoLocal) {
+          parsedUser.fotoUrl = fotoLocal;
+        }
+        
+        setUser(parsedUser);
       }
     } catch (e) {
       console.log('Erro ao carregar usuário salvo:', e);
@@ -50,55 +59,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const data = await authService.login(email, senha);
 
-      console.log('--- RETORNO DA API ---');
-      console.log('Dados recebidos:', data);
-
-      if (!data?.token) {
-        Alert.alert(
-          'Erro de Autenticação', 
-          'A API respondeu, mas não retornou o token. Verifique o contrato da API no Swagger.'
-        );
+      if (!data?.token || !data?.user) {
+        Alert.alert('Erro', 'Falha na autenticação. Verifique os dados e tente novamente.');
         return false;
       }
 
-      if (!data?.user) {
-        Alert.alert(
-          'Erro de Autenticação', 
-          'A API retornou o token, mas não retornou os dados do usuário.'
-        );
-        return false;
-      }
+      // Busca a foto salva localmente para este usuário específico
+      const fotoLocalSalva = await AsyncStorage.getItem(`@ConectaSocial:foto_${data.user.id}`);
 
       const loggedUser: User = {
         id: Number(data.user.id),
         nome: data.user.nome,
         email: data.user.email,
         role: data.user.role,
-        fotoUrl: data.user.fotoUrl || null, // <-- Salva a foto caso o Java já retorne no login
+        // Se ele já tinha uma foto salva localmente, ela é carregada. Senão, fica nula.
+        fotoUrl: fotoLocalSalva || null, 
       };
 
       await AsyncStorage.setItem('@ConectaSocial:token', data.token);
       await AsyncStorage.setItem('@ConectaSocial:userData', JSON.stringify(loggedUser));
 
       setUser(loggedUser);
-
       return true;
 
     } catch (e: any) {
       console.log('--- ERRO NO LOGIN ---');
-      console.log('Objeto de erro completo:', e);
       
       let mensagemErro = 'Não foi possível conectar ao servidor.';
-
       if (e.response) {
-        console.log('Status HTTP:', e.response.status);
-        console.log('Dados do erro:', e.response.data);
-        
         mensagemErro = e.response.data?.message 
                     || e.response.data?.erro 
                     || e.response.data?.error
                     || `Erro ${e.response.status}: Verifique os dados informados.`;
-                    
       } else if (e.request) {
         mensagemErro = 'Servidor não respondeu. Verifique sua conexão ou se a API está online.';
       } else {
@@ -113,13 +105,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // --- NOVA FUNÇÃO: Atualiza a foto no contexto e no celular ---
+  // --- FUNÇÃO PARA SALVAR A FOTO LOCALMENTE ---
   const atualizarFotoContexto = async (novaFotoUrl: string) => {
     if (user) {
       const usuarioAtualizado = { ...user, fotoUrl: novaFotoUrl };
       setUser(usuarioAtualizado);
-      // Atualiza no AsyncStorage para persistir se o app for fechado
+      
+      // 1. Atualiza os dados do usuário (mantém o AsyncStorage do userData sincronizado)
       await AsyncStorage.setItem('@ConectaSocial:userData', JSON.stringify(usuarioAtualizado));
+      
+      // 2. Salva o caminho da imagem separadamente usando o ID do usuário
+      await AsyncStorage.setItem(`@ConectaSocial:foto_${user.id}`, novaFotoUrl);
     }
   };
 
@@ -128,6 +124,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await AsyncStorage.removeItem('@ConectaSocial:token');
       await AsyncStorage.removeItem('@ConectaSocial:userData');
+      // Não removemos a foto do usuário no logout para que, se ele logar novamente, a foto esteja lá
       setUser(null);
     } catch (e) {
       console.log('Erro ao fazer logout:', e);

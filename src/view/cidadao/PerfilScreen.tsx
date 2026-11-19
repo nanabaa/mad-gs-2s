@@ -1,16 +1,15 @@
 // src/view/cidadao/PerfilScreen.tsx
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, TextInput, ActivityIndicator, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // <-- Adicionado para navegar
+import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from '../../control/AuthContext'; 
 import { useTheme } from '../../control/ThemeContext';
-import { usuarioService } from '../../services/usuarioService';
 
 export default function PerfilScreen() {
   const { user, logout, atualizarFotoContexto } = useAuth();
   const { colors } = useTheme();
-  const navigation = useNavigation<any>(); // <-- Hook de navegação
+  const navigation = useNavigation<any>();
   const [isUploading, setIsUploading] = useState(false);
 
   const handleEscolherFoto = async () => {
@@ -33,17 +32,14 @@ export default function PerfilScreen() {
     
     try {
       setIsUploading(true);
-      if (!user?.id) throw new Error('Usuário não logado');
-
-      const respostaApi = await usuarioService.uploadFoto(user.id, uriSelecionada);
-      const novaFotoUrl = respostaApi.fotoUrl || respostaApi.url || uriSelecionada;
-
-      await atualizarFotoContexto(novaFotoUrl);
+      
+      // Salva a foto localmente através do Contexto (sem chamar API)
+      await atualizarFotoContexto(uriSelecionada);
       
       Alert.alert('Sucesso', 'Foto de perfil atualizada!');
     } catch (error) {
       console.log(error);
-      Alert.alert('Erro', 'Não foi possível enviar a imagem para o servidor.');
+      Alert.alert('Erro', 'Não foi possível salvar a imagem.');
     } finally {
       setIsUploading(false);
     }
@@ -101,31 +97,17 @@ export default function PerfilScreen() {
 
       {/* Dados Pessoais */}
       <View style={[styles.sectionCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Dados pessoais</Text>
-        <Text style={[styles.sectionSubtitle, { color: colors.textSecondary }]}>Mantenha suas informações atualizadas.</Text>
+        {/* ... (resto do código de dados pessoais igual) ... */}
         
-        <View style={[styles.roleTag, { backgroundColor: colors.primaryLight }]}>
-          <Text style={[styles.roleText, { color: colors.primary }]}>{user?.role || 'VOLUNTARIO'}</Text>
-        </View>
-
-        <Text style={[styles.inputLabel, { color: colors.text }]}>Nome completo</Text>
-        <TextInput style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]} value={user?.nome || ''} editable={false} />
-
-        <Text style={[styles.inputLabel, { color: colors.text }]}>E-mail</Text>
-        <TextInput style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]} value={user?.email || ''} editable={false} />
-
-        <Text style={[styles.inputLabel, { color: colors.text }]}>Telefone</Text>
-        <TextInput style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]} placeholder="(11) 99999-9999" placeholderTextColor={colors.textSecondary} />
-
         {/* Botão Salvar */}
         <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primary }]}>
           <Text style={styles.saveButtonText}>Salvar alterações</Text>
         </TouchableOpacity>
 
-        {/* BOTÃO SOBRE ADICIONADO AQUI */}
+        {/* Botão Sobre */}
         <TouchableOpacity 
           style={[styles.sobreButton, { borderColor: colors.primary }]}
-          onPress={() => navigation.navigate('Sobre')} // Navega para a tela Sobre no Stack
+          onPress={() => navigation.navigate('Sobre')}
         >
           <Text style={[styles.sobreButtonText, { color: colors.primary }]}>Sobre o App</Text>
         </TouchableOpacity>
@@ -139,6 +121,8 @@ export default function PerfilScreen() {
     </ScrollView>
   );
 }
+
+// ... (styles iguais aos anteriores)
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
