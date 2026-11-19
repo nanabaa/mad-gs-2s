@@ -32,10 +32,7 @@ export default function PerfilScreen() {
     
     try {
       setIsUploading(true);
-      
-      // Salva a foto localmente através do Contexto (sem chamar API)
       await atualizarFotoContexto(uriSelecionada);
-      
       Alert.alert('Sucesso', 'Foto de perfil atualizada!');
     } catch (error) {
       console.log(error);
@@ -81,30 +78,32 @@ export default function PerfilScreen() {
             </TouchableOpacity>
 
             <Text style={[styles.hintText, { color: colors.textSecondary }]}>Formatos aceitos: JPG, PNG e WebP. Tamanho máximo: 2 MB.</Text>
-            
-            <TouchableOpacity 
-              style={[styles.updatePhotoButton, { borderColor: colors.primary }]} 
-              onPress={handleEscolherFoto}
-              disabled={isUploading}
-            >
-              <Text style={[styles.updatePhotoText, { color: colors.primary }]}>
-                {isUploading ? 'Enviando...' : 'Atualizar foto'}
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
 
       {/* Dados Pessoais */}
       <View style={[styles.sectionCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        {/* ... (resto do código de dados pessoais igual) ... */}
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Dados pessoais</Text>
+        <Text style={[styles.sectionSubtitle, { color: colors.textSecondary }]}>Mantenha suas informações atualizadas.</Text>
         
-        {/* Botão Salvar */}
+        <View style={[styles.roleTag, { backgroundColor: colors.primaryLight }]}>
+          <Text style={[styles.roleText, { color: colors.primary }]}>{user?.role || 'VOLUNTARIO'}</Text>
+        </View>
+
+        <Text style={[styles.inputLabel, { color: colors.text }]}>Nome completo</Text>
+        <TextInput style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]} value={user?.nome || ''} editable={false} />
+
+        <Text style={[styles.inputLabel, { color: colors.text }]}>E-mail</Text>
+        <TextInput style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]} value={user?.email || ''} editable={false} />
+
+        <Text style={[styles.inputLabel, { color: colors.text }]}>Telefone</Text>
+        <TextInput style={[styles.input, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]} placeholder="(11) 99999-9999" placeholderTextColor={colors.textSecondary} />
+
         <TouchableOpacity style={[styles.saveButton, { backgroundColor: colors.primary }]}>
           <Text style={styles.saveButtonText}>Salvar alterações</Text>
         </TouchableOpacity>
 
-        {/* Botão Sobre */}
         <TouchableOpacity 
           style={[styles.sobreButton, { borderColor: colors.primary }]}
           onPress={() => navigation.navigate('Sobre')}
@@ -112,7 +111,6 @@ export default function PerfilScreen() {
           <Text style={[styles.sobreButtonText, { color: colors.primary }]}>Sobre o App</Text>
         </TouchableOpacity>
 
-        {/* Botão Logout */}
         <TouchableOpacity style={[styles.logoutButton, { borderColor: colors.border }]} onPress={logout}>
           <Text style={[styles.logoutText, { color: '#E85D2A' }]}>Sair da conta (Logout)</Text>
         </TouchableOpacity>
@@ -121,8 +119,6 @@ export default function PerfilScreen() {
     </ScrollView>
   );
 }
-
-// ... (styles iguais aos anteriores)
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
@@ -140,8 +136,6 @@ const styles = StyleSheet.create({
   fileButtonText: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 4, fontSize: 12, marginRight: 8 },
   fileText: { fontSize: 12 },
   hintText: { fontSize: 12, marginBottom: 12 },
-  updatePhotoButton: { borderWidth: 1, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8, alignSelf: 'flex-start' },
-  updatePhotoText: { fontWeight: 'bold', fontSize: 14 },
   
   roleTag: { alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12, marginBottom: 16 },
   roleText: { fontSize: 12, fontWeight: 'bold', letterSpacing: 0.5 },
@@ -151,7 +145,6 @@ const styles = StyleSheet.create({
   saveButton: { padding: 15, borderRadius: 8, alignItems: 'center', marginTop: 12 },
   saveButtonText: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
   
-  // Estilos do novo botão Sobre
   sobreButton: { padding: 15, borderRadius: 8, alignItems: 'center', marginTop: 12, borderWidth: 1 },
   sobreButtonText: { fontWeight: 'bold', fontSize: 16 },
 
